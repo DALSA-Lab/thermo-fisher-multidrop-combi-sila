@@ -1,0 +1,17 @@
+services:
+  multidrop:
+    image: multidrop
+    restart: always
+    network_mode: host
+    environment:
+      ENVIRONMENT: production
+      SILA_SERVER__HOST: 0.0.0.0
+      SILA_SERVER__PORT: 50002
+      SILA_SERVER__UUID: 4ad52a9b-0c68-48d4-99ac-3bf689e1c222
+      CLOUD_SERVER_ENDPOINT__ENDPOINT: localhost:443
+      CLOUD_SERVER_ENDPOINT__SECURE: True
+      SERIAL_PORT: COM1
+      SIMULATION_MODE: True
+      DEVICE: Multidrop_384
+      PLATE_TYPE: WELL_PLATE_96
+    privileged: true

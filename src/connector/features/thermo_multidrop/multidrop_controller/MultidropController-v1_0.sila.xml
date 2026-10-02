@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Feature Locale="en-us" SiLA2Version="1.1" FeatureVersion="1.0" MaturityLevel="Draft" Originator="io.unitelabs" Category="dispenser"
+	xmlns="http://www.sila-standard.org"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>MultidropController</Identifier>
+	<DisplayName>Multidrop Controller</DisplayName>
+	<Description> This Feature provides control over the Multidrop Reagent Dispenser. This feature directly exposes the underlying hardware interface. </Description>
+	<Command>
+		<Identifier>DispenseNextNColumns</Identifier>
+		<DisplayName>Dispense Next N Columns</DisplayName>
+		<Description> Dispense the given number of columns starting from the current column. If the column count is not given, one column is dispensed. The dispensing volume is set by the 'set volume' command. After the command is completed, the dispensing tips remain at the last column dispensed. If this command is received when the plate is in the home position, dispensing starts from column 1. ER3 is reported if more columns are requested than left over from the current column to the last column of the plate. </Description>
+		<Observable>No</Observable>
+		<Parameter>
+			<Identifier>N</Identifier>
+			<DisplayName>N</DisplayName>
+			<Description> The number of columns to dispense next. The number of columns n must be in the range of the number of columns left on the plate. </Description>
+			<DataType>
+				<Basic>Integer</Basic>
+			</DataType>
+		</Parameter>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Command>
+	<Command>
+		<Identifier>DispensePlate</Identifier>
+		<DisplayName>Dispense Plate</DisplayName>
+		<Description> Dispense the volume set by the 'set volume' command to the entire plate. Primes 10 μl into the priming vessel before dispensing. </Description>
+		<Observable>No</Observable>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Command>
+	<Command>
+		<Identifier>DispenseUsingStart</Identifier>
+		<DisplayName>Dispense Using Start</DisplayName>
+		<Description> Dispense the plate using parameters from the plate switch and the volume/columns thumbwheels. This command has the same effect as pressing the start key. This command has been added to version 1.7. </Description>
+		<Observable>No</Observable>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Command>
+	<Command>
+		<Identifier>EmptyPump</Identifier>
+		<DisplayName>Empty Pump</DisplayName>
+		<Description>Empty the pump. A volume of 880 μl is pumped backwards.</Description>
+		<Observable>No</Observable>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Command>
+	<Command>
+		<Identifier>MovePlateColumnToDispensingTips</Identifier>
+		<DisplayName>Move Plate Column To Dispensing Tips</DisplayName>
+		<Description> Drive the requested column under the dispensing tips. Valid columns are 1 to 12 for a 96-well plate and 1 to 24 for a 384-well plate. If the column is not given, the steps are one column forward or the plate returns to home position after the last column. </Description>
+		<Observable>No</Observable>
+		<Parameter>
+			<Identifier>Column</Identifier>
+			<DisplayName>Column</DisplayName>
+			<Description> The plate column to move under the dispensing tip. Must be in the range of available columns for the selected plate type. </Description>
+			<DataType>
+				<Constrained>
+					<DataType>
+						<Basic>Integer</Basic>
+					</DataType>
+					<Constraints>
+						<MinimalInclusive>1</MinimalInclusive>
+						<MaximalInclusive>24</MaximalInclusive>
+					</Constraints>
+				</Constrained>
+			</DataType>
+		</Parameter>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Command>
+	<Command>
+		<Identifier>MovePlateOut</Identifier>
+		<DisplayName>Move Plate Out</DisplayName>
+		<Description>Drive the plate out to the priming position.</Description>
+		<Observable>No</Observable>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Command>
+	<Command>
+		<Identifier>PrimePump</Identifier>
+		<DisplayName>Prime Pump</DisplayName>
+		<Description> Prime the given volume. For a 96-well plate the volume must be in the range of 5 to 1000 μl. For a 384-well plate the range is 5 to 100 μl. The volume must be dispensed in 5 μl increments. If the volume is not given, 200 μl is primed. If the plate is not in the home position when the command is received, it is first driven into home position. </Description>
+		<Observable>No</Observable>
+		<Parameter>
+			<Identifier>Volume</Identifier>
+			<DisplayName>Volume</DisplayName>
+			<Description> The volume to prime in μl. Must be passed in 5 μl increments and may not exceed 1000 μl for 96-well plate and 100 μl for a 384-well-plate. </Description>
+			<DataType>
+				<Constrained>
+					<DataType>
+						<Basic>Integer</Basic>
+					</DataType>
+					<Constraints>
+						<MinimalInclusive>5</MinimalInclusive>
+						<MaximalInclusive>1000</MaximalInclusive>
+						<Unit>
+							<Label>uL</Label>
+							<Factor>1000000000</Factor>
+							<Offset>0</Offset>
+							<UnitComponent>
+								<SIUnit>Meter</SIUnit>
+								<Exponent>3</Exponent>
+							</UnitComponent>
+						</Unit>
+					</Constraints>
+				</Constrained>
+			</DataType>
+		</Parameter>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Command>
+	<Command>
+		<Identifier>Reset</Identifier>
+		<DisplayName>Reset</DisplayName>
+		<Description>Reset the instrument. There is no response to this command.</Description>
+		<Observable>No</Observable>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Command>
+	<Command>
+		<Identifier>SetPlateType</Identifier>
+		<DisplayName>Set Plate Type</DisplayName>
+		<Description> Set the plate type assumed for all other commands except the ‘G’ command. At startup the default type is read from the plate switch. t = 0 96-well plate t = 1 384-well plate This command has been added to version 1.7. </Description>
+		<Observable>No</Observable>
+		<Parameter>
+			<Identifier>PlateType</Identifier>
+			<DisplayName>Plate Type</DisplayName>
+			<Description>The plate type may be either a 96-well plate (0) or a 384-well plate (1).</Description>
+			<DataType>
+				<Constrained>
+					<DataType>
+						<Basic>Integer</Basic>
+					</DataType>
+					<Constraints>
+						<MinimalInclusive>0</MinimalInclusive>
+						<MaximalInclusive>1</MaximalInclusive>
+					</Constraints>
+				</Constrained>
+			</DataType>
+		</Parameter>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Command>
+	<Command>
+		<Identifier>SetVolume</Identifier>
+		<DisplayName>Set Volume</DisplayName>
+		<Description> Sets the volume for dispensing. For a 96-well plate the volume must be in the range of 5 to 1000 μl. For a 384-well plate the range is 5 to 140 μl. The volume must be dispensed in 5 μl increments. </Description>
+		<Observable>No</Observable>
+		<Parameter>
+			<Identifier>Volume</Identifier>
+			<DisplayName>Volume</DisplayName>
+			<Description> The volume must be set in 5 μl increments and may not exceed the respective limits for 96-well plates (1000 μl) and 384-well-plates (140 μl). </Description>
+			<DataType>
+				<Constrained>
+					<DataType>
+						<Basic>Integer</Basic>
+					</DataType>
+					<Constraints>
+						<MinimalInclusive>5</MinimalInclusive>
+						<MaximalInclusive>1000</MaximalInclusive>
+						<Unit>
+							<Label>uL</Label>
+							<Factor>1000000000</Factor>
+							<Offset>0</Offset>
+							<UnitComponent>
+								<SIUnit>Meter</SIUnit>
+								<Exponent>3</Exponent>
+							</UnitComponent>
+						</Unit>
+					</Constraints>
+				</Constrained>
+			</DataType>
+		</Parameter>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Command>
+	<Command>
+		<Identifier>Shake</Identifier>
+		<DisplayName>Shake</DisplayName>
+		<Description> Shake the plate the desired amount of time. The time is seconds and may range from 1 to 60. </Description>
+		<Observable>No</Observable>
+		<Parameter>
+			<Identifier>Duration</Identifier>
+			<DisplayName>Duration</DisplayName>
+			<Description>The duration to shake the plate in seconds. Must be in the range from 1 to 60 s.</Description>
+			<DataType>
+				<Constrained>
+					<DataType>
+						<Basic>Integer</Basic>
+					</DataType>
+					<Constraints>
+						<MinimalInclusive>1</MinimalInclusive>
+						<MaximalInclusive>60</MaximalInclusive>
+						<Unit>
+							<Label>s</Label>
+							<Factor>1</Factor>
+							<Offset>0</Offset>
+							<UnitComponent>
+								<SIUnit>Second</SIUnit>
+								<Exponent>1</Exponent>
+							</UnitComponent>
+						</Unit>
+					</Constraints>
+				</Constrained>
+			</DataType>
+		</Parameter>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Command>
+	<Property>
+		<Identifier>DeviceType</Identifier>
+		<DisplayName>Device Type</DisplayName>
+		<Description> The device type. The default on startup can be set with the environmental variable DEVICE. The device type is overwritten if another device type is found via the version command during initialization. </Description>
+		<Observable>No</Observable>
+		<DataType>
+			<Basic>String</Basic>
+		</DataType>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Property>
+	<Property>
+		<Identifier>FirmwareVersion</Identifier>
+		<DisplayName>Firmware Version</DisplayName>
+		<Description>The internal software version of the instrument.</Description>
+		<Observable>No</Observable>
+		<DataType>
+			<Basic>String</Basic>
+		</DataType>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Property>
+	<Property>
+		<Identifier>PlateType</Identifier>
+		<DisplayName>Plate Type</DisplayName>
+		<Description> The set plate type. The default on startup can be set with the environmental variable PLATE_TYPE. 0: 96-well plate 1: 384-well plate </Description>
+		<Observable>No</Observable>
+		<DataType>
+			<Basic>String</Basic>
+		</DataType>
+		<DefinedExecutionErrors>
+			<Identifier>MultidropException</Identifier>
+		</DefinedExecutionErrors>
+	</Property>
+	<DefinedExecutionError>
+		<Identifier>MultidropException</Identifier>
+		<DisplayName>Multidrop Exception</DisplayName>
+		<Description> Raised when a command or attribute is invalid for the Multidrop device. Specific to errors raised by the device </Description>
+	</DefinedExecutionError>
+</Feature>
